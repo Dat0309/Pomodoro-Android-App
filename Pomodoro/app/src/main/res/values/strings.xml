@@ -3,4 +3,12 @@
     <string name="text_splash">POMODORO</string>
     <string name="btn_start">Start</string>
     <string name="btn_pause">Pause</string>
+    <string-array name="arr_plant">
+        <item>plant1</item>
+        <item>plant2</item>
+        <item>plant3</item>
+        <item>plant4</item>
+        <item>plant5</item>
+        <item>plant6</item>
+    </string-array>
 </resources>
