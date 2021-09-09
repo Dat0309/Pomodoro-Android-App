@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainWindown"
+    android:background="@color/bg">
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="180dp"
+        android:layout_height="256dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="111dp"
+        android:src="@drawable/plant1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_start"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="176dp"
+        android:layout_marginEnd="81dp"
+        android:text="@string/btn_start"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:background="@drawable/custom_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgView" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_pause"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="81dp"
+        android:layout_marginBottom="84dp"
+        android:background="@drawable/custom_btn_pause"
+        android:text="@string/btn_pause"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
