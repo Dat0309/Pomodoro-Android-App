@@ -88,7 +88,7 @@ public class MainWindown extends AppCompatActivity {
                     btnDown.animate().alpha(1).setDuration(300).start();
                     btnPause.setEnabled(false);
                     btnBreak.setEnabled(false);
-                    Toast.makeText(MainWindown.this, "Pause",Toast.LENGTH_LONG).show();
+                    resetTime();
                 }
                 else if(mBreakTimeIsRunning){
                     pauseTime();
@@ -98,6 +98,7 @@ public class MainWindown extends AppCompatActivity {
                     btnDown.animate().alpha(1).setDuration(300).start();
                     btnPause.setEnabled(false);
                     btnStart.setEnabled(false);
+                    resetTime();
                 }
             }
         });
