@@ -3,6 +3,7 @@
     <string name="text_splash">POMODORO</string>
     <string name="btn_start">Start</string>
     <string name="btn_pause">Pause</string>
+    <string name="btn_break">Break</string>
     <string-array name="arr_plant">
         <item>plant1</item>
         <item>plant2</item>

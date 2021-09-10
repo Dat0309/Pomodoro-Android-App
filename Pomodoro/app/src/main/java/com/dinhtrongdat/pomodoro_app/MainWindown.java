@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -22,16 +23,17 @@ import java.util.concurrent.TimeUnit;
 
 public class MainWindown extends AppCompatActivity {
 
-    Button btnStart, btnPause;
+    Button btnStart, btnPause, btnBreak;
     ImageView imgView;
     Animation anim;
     TextView txtCountdown;
     ImageButton btnUp, btnDown;
-    private static long START_TIME_IN_MILLISECONN = 600000;
+    private long BREAK_TIME = 600000;
     public static ArrayList<String> arrName;
     private CountDownTimer mCountDownTimer;
     private boolean mTimeIsRunning;
-    private long mTimeLeftInMillis = START_TIME_IN_MILLISECONN;
+    private boolean mBreakTimeIsRunning;
+    private long mTimeLeftInMillis = DataManager.getTime();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,11 @@ public class MainWindown extends AppCompatActivity {
         txtCountdown = (TextView) findViewById(R.id.txt_countdown);
         btnUp = (ImageButton) findViewById(R.id.btn_up);
         btnDown = (ImageButton) findViewById(R.id.btn_down);
+        btnBreak = (Button) findViewById(R.id.btn_break);
+        updateCountDownText();
 
         btnPause.setAlpha(0);
+        btnBreak.setAlpha(0);
         anim = AnimationUtils.loadAnimation(this, R.anim.img_anim);
 
         String[] mangTen = getResources().getStringArray(R.array.arr_plant);
@@ -61,20 +66,63 @@ public class MainWindown extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnPause.setEnabled(true);
                 startTime();
                 Collections.shuffle(arrName);
                 int idimg = getResources().getIdentifier(arrName.get(2), "drawable", getPackageName());
                 imgView.setImageResource(idimg);
                 btnPause.animate().alpha(1).translationY(-80).setDuration(300).start();
                 btnStart.animate().alpha(0).setDuration(300).start();
+                btnUp.animate().alpha(0).setDuration(300).start();
+                btnDown.animate().alpha(0).setDuration(300).start();
             }
         });
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pauseTime();
-                btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
-                btnStart.animate().alpha(1).setDuration(300).start();
+                if(mTimeIsRunning) {
+                    pauseTime();
+                    btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
+                    btnStart.animate().alpha(1).setDuration(300).start();
+                    btnUp.animate().alpha(1).setDuration(300).start();
+                    btnDown.animate().alpha(1).setDuration(300).start();
+                    btnPause.setEnabled(false);
+                    btnBreak.setEnabled(false);
+                    Toast.makeText(MainWindown.this, "Pause",Toast.LENGTH_LONG).show();
+                }
+                else if(mBreakTimeIsRunning){
+                    pauseTime();
+                    btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
+                    btnBreak.animate().alpha(1).setDuration(300).start();
+                    btnUp.animate().alpha(1).setDuration(300).start();
+                    btnDown.animate().alpha(1).setDuration(300).start();
+                    btnPause.setEnabled(false);
+                    btnStart.setEnabled(false);
+                }
+            }
+        });
+        btnBreak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startBreakTime();
+                btnPause.animate().alpha(1).translationY(-80).setDuration(300).start();
+                btnStart.animate().alpha(0).setDuration(300).start();
+                btnBreak.animate().alpha(0).setDuration(300).start();
+                btnUp.animate().alpha(0).setDuration(300).start();
+                btnDown.animate().alpha(0).setDuration(300).start();
+                btnStart.setEnabled(false);
+            }
+        });
+        btnUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                increaseTime();
+            }
+        });
+        btnDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decreaseTime();
             }
         });
     }
@@ -83,6 +131,7 @@ public class MainWindown extends AppCompatActivity {
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
             public void onTick(long l) {
+                mTimeIsRunning = true;
                 mTimeLeftInMillis = l;
                 updateCountDownText();
             }
@@ -90,11 +139,37 @@ public class MainWindown extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mTimeIsRunning = false;
+                mBreakTimeIsRunning = true;
+                breakTime();
                 btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
-                btnStart.animate().alpha(1).setDuration(300).start();
+                btnBreak.animate().alpha(1).setDuration(300).start();
+                btnUp.animate().alpha(1).setDuration(300).start();
+                btnDown.animate().alpha(1).setDuration(300).start();
+                btnBreak.setEnabled(true);
             }
         }.start();
         mTimeIsRunning = true;
+    }
+    private void startBreakTime(){
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis,1000) {
+            @Override
+            public void onTick(long l) {
+                mTimeLeftInMillis = l;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                mBreakTimeIsRunning = false;
+                mTimeIsRunning = true;
+                resetTime();
+                btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
+                btnStart.animate().alpha(1).setDuration(300).start();
+                btnUp.animate().alpha(1).setDuration(300).start();
+                btnDown.animate().alpha(1).setDuration(300).start();
+                btnStart.setEnabled(true);
+            }
+        }.start();
     }
 
     private void updateCountDownText() {
@@ -107,6 +182,23 @@ public class MainWindown extends AppCompatActivity {
     }
     private void pauseTime(){
         mCountDownTimer.cancel();
-        mTimeIsRunning = false;
+    }
+    private void resetTime(){
+        mTimeLeftInMillis = DataManager.getTime();
+        updateCountDownText();
+    }
+    private void breakTime(){
+        mTimeLeftInMillis = BREAK_TIME;
+        updateCountDownText();
+    }
+    private void increaseTime(){
+        mTimeLeftInMillis += 300000;
+        DataManager.setTime(mTimeLeftInMillis);
+        updateCountDownText();
+    }
+    private void decreaseTime(){
+        mTimeLeftInMillis -= 300000;
+        DataManager.setTime(mTimeLeftInMillis);
+        updateCountDownText();
     }
 }
