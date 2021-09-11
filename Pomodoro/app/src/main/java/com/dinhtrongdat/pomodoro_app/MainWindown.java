@@ -2,8 +2,10 @@ package com.dinhtrongdat.pomodoro_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -62,6 +64,7 @@ public class MainWindown extends AppCompatActivity {
         Collections.shuffle(arrName);
         int idHinh = getResources().getIdentifier(arrName.get(2), "drawable", getPackageName());
         imgView.setImageResource(idHinh);
+        imgView.setAnimation(anim);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +80,7 @@ public class MainWindown extends AppCompatActivity {
                 btnDown.animate().alpha(0).setDuration(300).start();
             }
         });
+
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,15 +97,16 @@ public class MainWindown extends AppCompatActivity {
                 else if(mBreakTimeIsRunning){
                     pauseTime();
                     btnPause.animate().alpha(0).translationY(80).setDuration(300).start();
-                    btnBreak.animate().alpha(1).setDuration(300).start();
+                    btnStart.animate().alpha(1).setDuration(300).start();
                     btnUp.animate().alpha(1).setDuration(300).start();
                     btnDown.animate().alpha(1).setDuration(300).start();
                     btnPause.setEnabled(false);
-                    btnStart.setEnabled(false);
+                    btnStart.setEnabled(true);
                     resetTime();
                 }
             }
         });
+
         btnBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,14 +117,17 @@ public class MainWindown extends AppCompatActivity {
                 btnUp.animate().alpha(0).setDuration(300).start();
                 btnDown.animate().alpha(0).setDuration(300).start();
                 btnStart.setEnabled(false);
+                btnPause.setEnabled(true);
             }
         });
+
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 increaseTime();
             }
         });
+
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,6 +155,7 @@ public class MainWindown extends AppCompatActivity {
                 btnUp.animate().alpha(1).setDuration(300).start();
                 btnDown.animate().alpha(1).setDuration(300).start();
                 btnBreak.setEnabled(true);
+                playSound();
             }
         }.start();
         mTimeIsRunning = true;
@@ -172,7 +181,6 @@ public class MainWindown extends AppCompatActivity {
             }
         }.start();
     }
-
     private void updateCountDownText() {
         long hours = TimeUnit.MILLISECONDS.toHours(mTimeLeftInMillis);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(mTimeLeftInMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(mTimeLeftInMillis));
@@ -201,5 +209,9 @@ public class MainWindown extends AppCompatActivity {
         mTimeLeftInMillis -= 300000;
         DataManager.setTime(mTimeLeftInMillis);
         updateCountDownText();
+    }
+    private void playSound(){
+        final MediaPlayer alarmSound = MediaPlayer.create(this, R.raw.melody1);
+        alarmSound.start();
     }
 }
