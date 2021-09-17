@@ -56,7 +56,8 @@ public class MainWindown extends AppCompatActivity {
 
         btnPause.setAlpha(0);
         btnBreak.setAlpha(0);
-        anim = AnimationUtils.loadAnimation(this, R.anim.img_anim);
+        anim = AnimationUtils.loadAnimation(this, R.anim.translation_icon);
+        imgView.setAnimation(anim);
 
         String[] mangTen = getResources().getStringArray(R.array.arr_plant);
         arrName = new ArrayList<>(Arrays.asList(mangTen));
